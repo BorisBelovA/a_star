@@ -268,6 +268,7 @@ openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из откры
 
 console.log('Начальная точка: ' + thisNode);
 
+
 next = nextNode(thisNode)
 closeList.push(thisNode);
 
