@@ -73,7 +73,7 @@ var choseNextNode = function(node, arr){
 };
 
 var nextNode = function (node) {
-    let thisNode = node; //Текущая точка  //При буквах надо доделать конструкцию поиска имени ноды из масива нод
+    let thisNode = node;                                //Текущая точка  //При буквах надо доделать конструкцию поиска имени ноды из масива нод
     let neighbors = [];                                 // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
     closeList.push(thisNode);
     for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
@@ -126,7 +126,7 @@ var A_star = function(startNode, endNode){
         thisNode = next; //На этом шаге сделали 1 - новой точкой
         openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
         if(next === null){
-            thisNode = openList[0]
+            thisNode = openList[0];
             console.log('Начальная точка: ' + thisNode);
             openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
             next = nextNode(thisNode);
@@ -142,62 +142,9 @@ var A_star = function(startNode, endNode){
     }while (thisNode!==endNode)
     };
 
-A_star(startNode, endNode)
-
-/*nextNode(startNode);
-console.log(nodes);*/
-/*///////////////
-console.log('Начальная точка: ' + startNode);
-
-next = nextNode(startNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-
-///////////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-
-///////////////////////*/
+A_star(startNode, endNode);
 
 
-/*
-console.log('Начальная точка: ' + startNode);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-*/
-
-
-/////////////////////////
-//A_star(startNode, endNode);
-
-/*console.log('Начальная точка: ' + startNode);
-
-next = nextNode(startNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка*/
-////////////////
 
 /*
 Повторяющаяся конструкция
