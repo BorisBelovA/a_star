@@ -88,19 +88,6 @@ var nextNode = function (node) {
 
     let min = 9999999;
     let next = null;
-    /*for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
-        if(((adjacency_matrix[thisNode][i]!==0)&&(!closeList.includes(nodes[thisNode].name)) && ((nodes[thisNode].func < min)))){
-            min = nodes[openList[i]].func;
-            next = nodes[openList[i]].name;
-        }
-    }*/
-    // console.log("thisNode " + adjacency_matrix[thisNode].length);
-    /*for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
-        if(((adjacency_matrix[thisNode][i]!==0)&&(!closeList.includes(nodes[thisNode].name)) && ((nodes[thisNode].func < min)))){
-            min = nodes[thisNode].func;
-            next = nodes[thisNode].name;
-        }
-    }*/
 
     console.log(thisNode);
     for(let i = 0; i<openList.length; i++){
@@ -167,102 +154,7 @@ console.log(nodes);
 thisNode = next; //На этом шаге сделали 1 - новой точкой
 openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
 ////////////////
-console.log('Начальная точка: ' + thisNode);
 
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
-console.log('Начальная точка: ' + thisNode);
-
-next = nextNode(thisNode)
-
-console.log('next ' + next);
-console.log("OpenList: " + openList);
-console.log('CloseList: ' + closeList);
-console.log(nodes);
-
-thisNode = next; //На этом шаге сделали 1 - новой точкой
-openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
-////////////////
 /*
 Повторяющаяся конструкция
 
@@ -281,4 +173,3 @@ thisNode = next; //На этом шаге сделали 1 - новой точк
 openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
  */
 
-// console.log(nodes[5].name);
