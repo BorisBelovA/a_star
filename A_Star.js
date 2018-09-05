@@ -6,6 +6,7 @@ var node = {
 
 function Node(name) {
     this.name = name;
+    this.g = 0;
 }
 
 var nodes_arr = [0,1,2,3,4,5,6,7,8,9];
@@ -57,8 +58,6 @@ var heuristic = function (start, end) { // Эвристическая функц
     return Math.abs(x1-x2) + Math.abs(y1-y2);
 };
 
-
-
 var nextNode = function (node) {
     let thisNode = node;
     for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
@@ -69,6 +68,7 @@ var nextNode = function (node) {
             if(!openList.includes(nodes[i].name)){ // Если вершина не содержится в открытом списке
                 openList.push(nodes[i].name);
                 nodes[i].parent = thisNode;
+                nodes[i].g = nodes[thisNode].g + adjacency_matrix[thisNode][i];
                 //console.log("Эвристика для: " + nodes[i].name + '  ' + heuristic(i,endNode));
                 nodes[i].func = heuristic(i,endNode) + adjacency_matrix[thisNode][i]; // Записывам примерное расстояние до конца
             }else{  // Если вершина содержится в открытом списке
