@@ -6,7 +6,7 @@ var node = {
 
 function Node(name) {
     this.name = name;
-    this.g = 0;
+    this.g = null;
 }
 
 var nodes_arr = [0,1,2,3,4,5,6,7,8,9];
@@ -35,7 +35,7 @@ var heuristic_matrix = [[0,1,'',4,''],
                         [7,'','',9,'']];
 
 
-var startNode = 4,
+var startNode = 8,
     endNode = 7;
 
 var openList = [],
@@ -58,75 +58,64 @@ var heuristic = function (start, end) { // Эвристическая функц
     return Math.abs(x1-x2) + Math.abs(y1-y2);
 };
 
+var choseNextNode = function(node, arr){
+    let neighbors = arr;                                // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
+    let thisNode = node;                                    //На вход подается thisNode из nextNode
+    let min = 999999;
+    let nextNode = null;
+    for(let i = 0; i < neighbors.length; i++){
+        if((neighbors[i].func<min) && (openList.includes(neighbors[i].name))){
+            min = neighbors[i].func;
+            nextNode = neighbors[i].name;
+        }
+    }
+    return nextNode;
+};
+
 var nextNode = function (node) {
-    let thisNode = node;
-    for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
-        console.log("To " + nodes[i].name + " from " +thisNode + " way is - " +adjacency_matrix[thisNode][i] + '  ' + thisNode + '   ' + i + '  ' + ((adjacency_matrix[thisNode][i]!==0)&&(!closeList.includes(nodes[i].name))));
-        if(((adjacency_matrix[thisNode][i]!==0)&&(!closeList.includes(nodes[i].name)))){   //Если есть путь и если данная вершина
-            // не содержится в закрытом списке
-
-            if(!openList.includes(nodes[i].name)){ // Если вершина не содержится в открытом списке
-                openList.push(nodes[i].name);
-                nodes[i].parent = thisNode;
-                nodes[i].g = nodes[thisNode].g + adjacency_matrix[thisNode][i];
-                //console.log("Эвристика для: " + nodes[i].name + '  ' + heuristic(i,endNode));
-                nodes[i].func = heuristic(i,endNode) + adjacency_matrix[thisNode][i]; // Записывам примерное расстояние до конца
-            }else{  // Если вершина содержится в открытом списке
-                //Сравниваем ее g и g от текущей клетки к ней........Ну ты понял
-                let parent_g = adjacency_matrix[nodes[i].parent][i];
-                console.log("Parent_g: " + parent_g);
-                let g = adjacency_matrix[thisNode][i];
-                console.log("g: " + g);
-                if(parent_g > g){
-                    nodes[i].parent = thisNode;
-                    nodes[i].func = heuristic(i,endNode) + adjacency_matrix[thisNode][i]
-                }
-                //console.log(parent_g);
-            }
-        }
-    }
-
-    let min = 9999999;
-    let next = null;
-
-    console.log(thisNode);
-    for(let i = 0; i<openList.length; i++){
-        if((adjacency_matrix[openList[i]][thisNode] != 0) && (nodes[openList[i]].func < min)){
-            //console.log('Way' + openList[i] + ' ' + thisNode)
-            min = nodes[openList[i]].func;
-            next = nodes[openList[i]].name;
-        }
-    }
-    /*for (let i = 0; i<openList.length; i++){
-        for(let j = 0; j<adjacency_matrix[openList[i]].length; j++){
-           // console.log("Нода "+ openList[i]+ " " + j+ '    ' + (adjacency_matrix[openList[i]][j]!==0))
-            if((adjacency_matrix[openList[i]][j]!==0)){
-                console.log('Есть путь к  '+nodes[openList[i].name])
-                if (!closeList.includes(nodes[openList[i]].name)){
-                    if(nodes[openList[i]].func < min){
-                        min = nodes[openList[i]].func;
-                        next = nodes[openList[i]].name;
-                    }
-                }
-            }
-        }
-        /!*if (nodes[openList[i]].func < min){
-            min = nodes[openList[i]].func
-            next = nodes[openList[i]].name
-        }*!/
-        //console.log(nodes[openList[i]].func + ' - ' + nodes[openList[i]].name)
-    }*/
-
-    //closeList.push(thisNode);
+    let thisNode = node; //Текущая точка  //При буквах надо доделать конструкцию поиска имени ноды из масива нод
+    let neighbors = [];                                 // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
     closeList.push(thisNode);
+    for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
 
-    return next;
+        if(adjacency_matrix[thisNode][i] !== 0){        //Если есть путь из текущей вершины в вершину Х
+           if(!openList.includes(nodes[i].name) && (!closeList.includes(nodes[i].name))){openList.push(nodes[i].name)}
+            neighbors.push(nodes[i]);                   // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
+
+            let possibleNode = nodes[i];                // Node {name: str, g: int}
+
+            if(openList.includes(possibleNode.name)){   //Если вершина Х в открытом списке, не ближе ли до нее путь от текущей вершины?
+
+                let current_g = possibleNode.g;
+                let possible_g = nodes[thisNode].g + adjacency_matrix[thisNode][i];
+                //console.log(current_g + ' - ' + possible_g);
+
+                if((current_g > possible_g) || (current_g === null)){             //Если Х.g > возмодный g, то значит, что мы можем в нее прийти более коротким путем
+
+                    possibleNode.g = possible_g;
+                    possibleNode.func = heuristic(possibleNode.name, endNode) + possibleNode.g;
+                    possibleNode.parent = thisNode;
+
+                }
+            }else if((!openList.includes(possibleNode.name)) && (!closeList.includes(nodes[i].name))){                                      //Если вершина Х нет в открытом списке, то просто посчитаем путь до нее от текущей вершины
+
+                possibleNode.g = nodes[thisNode].g + adjacency_matrix[thisNode][i]; //Просчитали G(x)
+                possibleNode.func = heuristic(possibleNode.name, endNode) + possibleNode.g; //Просчитали F(x) = G(x) + h(x)
+                possibleNode.parent = thisNode;
+
+            }
+        }
+    }
+
+    return choseNextNode(thisNode, neighbors);
 };
 
 var A_star = function(startNode, endNode){
+
     thisNode = startNode;
 
     do {
+
         console.log('Начальная точка: ' + thisNode);
         next = nextNode(thisNode);
 
@@ -136,12 +125,28 @@ var A_star = function(startNode, endNode){
         console.log(nodes);
         thisNode = next; //На этом шаге сделали 1 - новой точкой
         openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
-        //openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
-    }while (closeList.length != nodes_arr.length-1)
+        if(next === null){
+            thisNode = openList[0]
+            console.log('Начальная точка: ' + thisNode);
+            openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
+            next = nextNode(thisNode);
+
+            console.log('next ' + next);
+            console.log("OpenList: " + openList);
+            console.log('CloseList: ' + closeList);
+            console.log(nodes);
+            thisNode = next; //На этом шаге сделали 1 - новой точкой
+            openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
+        }
+
+    }while (thisNode!==endNode)
     };
 
-//A_star(startNode, endNode);
+A_star(startNode, endNode)
 
+/*nextNode(startNode);
+console.log(nodes);*/
+/*///////////////
 console.log('Начальная точка: ' + startNode);
 
 next = nextNode(startNode)
@@ -153,6 +158,45 @@ console.log(nodes);
 
 thisNode = next; //На этом шаге сделали 1 - новой точкой
 openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
+
+///////////////////////
+console.log('Начальная точка: ' + thisNode);
+
+next = nextNode(thisNode)
+
+console.log('next ' + next);
+console.log("OpenList: " + openList);
+console.log('CloseList: ' + closeList);
+console.log(nodes);
+
+thisNode = next; //На этом шаге сделали 1 - новой точкой
+openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка
+
+///////////////////////*/
+
+
+/*
+console.log('Начальная точка: ' + startNode);
+console.log("OpenList: " + openList);
+console.log('CloseList: ' + closeList);
+console.log(nodes);
+*/
+
+
+/////////////////////////
+//A_star(startNode, endNode);
+
+/*console.log('Начальная точка: ' + startNode);
+
+next = nextNode(startNode)
+
+console.log('next ' + next);
+console.log("OpenList: " + openList);
+console.log('CloseList: ' + closeList);
+console.log(nodes);
+
+thisNode = next; //На этом шаге сделали 1 - новой точкой
+openList.splice(openList.indexOf(thisNode),1); // Удалил 1 из открытого списка*/
 ////////////////
 
 /*
