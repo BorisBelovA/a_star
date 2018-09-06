@@ -47,7 +47,7 @@ var heuristic = function (start, end) { // Эвристическая функц
         if(heuristic_matrix[i].indexOf(start) !== -1){
             x1 = heuristic_matrix[i].indexOf(start);
             y1 = i;
-            //console.log("["+x1+";"+y1+"]"+" - " + start);
+           //console.log("["+x1+";"+y1+"]"+" - " + start);
         }
         if(heuristic_matrix[i].indexOf(end) !== -1){
             x2 = heuristic_matrix[i].indexOf(end);
@@ -116,36 +116,45 @@ var A_star = function(startNode, endNode){
 
     do {
 
-        console.log('Начальная точка: ' + thisNode);
+        //console.log('Начальная точка: ' + thisNode);
         next = nextNode(thisNode);
 
-        console.log('next ' + next);
+        /*console.log('next ' + next);
         console.log("OpenList: " + openList);
         console.log('CloseList: ' + closeList);
-        console.log(nodes);
+        console.log(nodes);*/
         thisNode = next; //На этом шаге сделали 1 - новой точкой
         openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
         if(next === null){
             thisNode = openList[0];
-            console.log('Начальная точка: ' + thisNode);
+            // console.log('Начальная точка: ' + thisNode);
             openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
             next = nextNode(thisNode);
 
-            console.log('next ' + next);
+            /*console.log('next ' + next);
             console.log("OpenList: " + openList);
             console.log('CloseList: ' + closeList);
-            console.log(nodes);
+            console.log(nodes);*/
             thisNode = next; //На этом шаге сделали 1 - новой точкой
             openList.splice(openList.indexOf(thisNode), 1); // Удалил 1 из открытого списка
         }
 
-    }while (thisNode!==endNode)
-    };
+    }while (thisNode!==endNode);
+    console.log(nodes);
+};
+
+/*function getPath(startNode, endNode){
+    nodes.forEach(function (element) {
+        if(element.name === endNode){
+            endIndex = nodes.indexOf(element);
+        }
+    });
+
+}*/
 
 A_star(startNode, endNode);
 
-
-
+//getPath(startNode, endNode);
 /*
 Повторяющаяся конструкция
 
