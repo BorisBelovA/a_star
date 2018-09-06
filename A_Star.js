@@ -4,18 +4,32 @@ var node = {
     func: null
 };
 
-function Node(name) {
-    this.name = name;
-    this.g = null;
+function Node() {
+    this.name = arguments[0];
+    if(arguments[1] === undefined){
+        this.g = null;
+    }else{
+        this.g = arguments[1];
+    }
 }
 
-var nodes_arr = [0,1,2,3,4,5,6,7,8,9];
+//var nodes_arr = [0,1,2,3,4,5,6,7,8,9];
+var nodes_arr = ['a','b','c','d','e','f','g','h','k','l'];
+
 
 var  nodes = [];
 
-for(let i = 0; i<=9; i++){
+/*for(let i = 0; i<=9; i++){
     var tempNode = new Node(i);
     nodes.push(tempNode);
+}*/
+function nodes_init() {
+    nodes = [];
+    closeList= [];
+    openList= [];
+    for(let i = 0; i<nodes_arr.length; i++){
+        nodes.push(new Node(nodes_arr[i]));
+    }
 }
 
 var adjacency_matrix = [[0, 6, 10, 0, 0, 0, 0, 0, 0, 0],
@@ -29,14 +43,18 @@ var adjacency_matrix = [[0, 6, 10, 0, 0, 0, 0, 0, 0, 0],
                         [0, 0, 0, 0, 6, 12, 16, 0, 0, 13],
                         [0, 0, 0, 0, 0, 0, 6, 8, 13, 0, ]];
 
-var heuristic_matrix = [[0,1,'',4,''],
+/*var heuristic_matrix = [[0,1,'',4,''],
                         [2,3,'',5,8],
                         ['','',6,'',''],
-                        [7,'','',9,'']];
+                        [7,'','',9,'']];*/
 
+var heuristic_matrix = [['a','b','','d',''],
+                        ['c','e','','f','k'],
+                        ['','','g','',''],
+                        ['h','','','l','']];
 
-var startNode = 8,
-    endNode = 7;
+var startNode = 'a',
+    endNode = 'k';
 
 var openList = [],
     closeList = [];
@@ -59,8 +77,8 @@ var heuristic = function (start, end) { // Эвристическая функц
 };
 
 var choseNextNode = function(node, arr){
-    let neighbors = arr;                                // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
-    let thisNode = node;                                    //На вход подается thisNode из nextNode
+    let neighbors = arr;                                    // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
+    let thisNode = node;                                    //На вход подается thisNode из nextNode (Числовой индекс)
     let min = 999999;
     let nextNode = null;
     for(let i = 0; i < neighbors.length; i++){
@@ -73,40 +91,36 @@ var choseNextNode = function(node, arr){
 };
 
 var nextNode = function (node) {
-    let thisNode = node;                                //Текущая точка  //При буквах надо доделать конструкцию поиска имени ноды из масива нод
+    let thisNode = findNode(node);                                //Текущая точка  //При буквах надо доделать конструкцию поиска имени ноды из масива нод
     let neighbors = [];                                 // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
-    closeList.push(thisNode);
+    closeList.push(nodes[thisNode].name);
     for(let i = 0; i<adjacency_matrix[thisNode].length; i++){
 
         if(adjacency_matrix[thisNode][i] !== 0){        //Если есть путь из текущей вершины в вершину Х
-           if(!openList.includes(nodes[i].name) && (!closeList.includes(nodes[i].name))){openList.push(nodes[i].name)}
+            if(!openList.includes(nodes[i].name) && (!closeList.includes(nodes[i].name))){
+                openList.push(nodes[i].name)
+            }
             neighbors.push(nodes[i]);                   // [Node{name, g, func, parent}, Node{name, g, func, parent}, ...]
-
             let possibleNode = nodes[i];                // Node {name: str, g: int}
-
             if(openList.includes(possibleNode.name)){   //Если вершина Х в открытом списке, не ближе ли до нее путь от текущей вершины?
-
                 let current_g = possibleNode.g;
                 let possible_g = nodes[thisNode].g + adjacency_matrix[thisNode][i];
                 //console.log(current_g + ' - ' + possible_g);
-
                 if((current_g > possible_g) || (current_g === null)){             //Если Х.g > возмодный g, то значит, что мы можем в нее прийти более коротким путем
 
                     possibleNode.g = possible_g;
                     possibleNode.func = heuristic(possibleNode.name, endNode) + possibleNode.g;
-                    possibleNode.parent = thisNode;
+                    possibleNode.parent = nodes[thisNode].name;
 
                 }
-            }else if((!openList.includes(possibleNode.name)) && (!closeList.includes(nodes[i].name))){                                      //Если вершина Х нет в открытом списке, то просто посчитаем путь до нее от текущей вершины
-
+            }else if((!openList.includes(possibleNode.name)) && (!closeList.includes(nodes[i].name))){   //Если вершина Х нет в открытом списке, то просто посчитаем путь до нее от текущей вершины
                 possibleNode.g = nodes[thisNode].g + adjacency_matrix[thisNode][i]; //Просчитали G(x)
                 possibleNode.func = heuristic(possibleNode.name, endNode) + possibleNode.g; //Просчитали F(x) = G(x) + h(x)
-                possibleNode.parent = thisNode;
+                possibleNode.parent = nodes[thisNode].name;
 
             }
         }
     }
-
     return choseNextNode(thisNode, neighbors);
 };
 
@@ -140,8 +154,18 @@ var A_star = function(startNode, endNode){
         }
 
     }while (thisNode!==endNode);
-    console.log(nodes);
 };
+
+function findNode(node){
+    let thisNode = node; //Node.name
+    let index = -1;
+    nodes.forEach(function (elem) {
+        if(elem.name === thisNode){
+            index = nodes.indexOf(elem);
+        }
+    });
+    return index
+}
 
 /*function getPath(startNode, endNode){
     nodes.forEach(function (element) {
@@ -152,7 +176,36 @@ var A_star = function(startNode, endNode){
 
 }*/
 
+function benchmark(){
+    closeList = [];
+    openList = [];
+    var date = new Date();
+    for(let i = 0; i<1000; i++) {
+        nodes_init();
+        A_star(startNode, endNode);
+    }
+    return new Date() - date;
+}
+/*nodes_init();
 A_star(startNode, endNode);
+nodes_init();
+A_star(startNode, endNode);
+nodes_init();
+A_star(startNode, endNode);*/
+
+//A_star(startNode, endNode);
+let time = 0;
+for(let i = 0; i<100; i++){
+    time+=benchmark()
+}
+//console.log(benchmark());
+console.log('Время работы на 100 раз: ' + time);
+console.log(nodes);
+
+
+/////////////
+
+/////////////
 
 //getPath(startNode, endNode);
 /*
